@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+  <title>Potato Clicker</title>
+
+  <!-- Adding JS Cookie to handle cookies -->
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+  
+  <!-- Adding Swarm to format numbers -->
+  <script src="https://cdn.jsdelivr.net/gh/erosson/swarm-numberformat@v0.1.0/dist/swarm-numberformat.min.js"></script>
+  
+  <script>
+    var clicker = {
+        potatoes:0,
+    // code for upgrades below
+        upgrades: {
+            potato_machine:{
+                amount:0,
+                cost:100,
+                pps:10, // potatoes per second
+                id:"Potato Machine"
+
+            },
+            potato_farm:{
+                amount:0,
+                cost:1000,
+                pps:20, // potatoes per second
+                id:"Potato Farm"
+
+            },
+            potato_factory:{
+                amount:0,
+                cost:10000,
+                pps:50, // potatoes per second
+                id:"Potato Factory"
+
+            }
+        },
+    //code for achievements below
+        achvmnts:[{req:"clicker.potatoes>0",earned:false,text:"Your first potato!"},{req:"clicker.potatoes>49",earned:false,text:"50 potatoes - you're on a roll!"}]
+    };
+    var delay = 0;
+    function item_clicked(item){
+        if(clicker.upgrades[item].cost <= clicker.potatoes){
+        clicker.potatoes-=clicker.upgrades[item].cost;
+        clicker.upgrades[item].amount++
+        clicker.upgrades[item].cost += Math.round(clicker.upgrades[item].cost*0.15);
+        update_upgrades();
+        }
+    }
+    // code for upgrade buttons below
+    function update_upgrades(){
+        document.querySelector("#upgrades").innerHTML="";
+        for(i in clicker.upgrades){
+            document.querySelector("#upgrades").innerHTML+=`<br> <button onclick="item_clicked('${i}')">${clicker.upgrades[i].id}:${clicker.upgrades[i].cost} potatoes</button> You currently have ${clicker.upgrades[i].amount}`;
+        }
+    }
+    function updatecount(){
+    // code to save progress to cache below
+        if(Cookies.get("clicker") != null && Cookies.get("clicker") != "undefined"){
+            var clicker1 = JSON.parse(Cookies.get("clicker"));
+            for(i in clicker.upgrades){
+                if(clicker1.upgrades[i] == null){
+                    clicker1.upgrades[i] = clicker.upgrades[i];
+                }
+            }
+            clicker = clicker1;
+    // code to enable achievements below
+            for(i in clicker.achvmnts){
+                if(clicker1.achvmnts[i] == null || clicker.achvmnts[i].text != clicker1.achvmnts[i].text){
+                    clicker1.achvmnts[i] = clicker.achvmnts[i]
+            }
+        }
+        clicker = clicker1;
+    }
+        update_upgrades();
+        setInterval(() => {
+        for(i in clicker.upgrades){
+            clicker.potatoes+=clicker.upgrades[i].amount * clicker.upgrades[i].pps / 20;
+        }
+    //code for allowing achievements
+        for(i in clicker.achvmnts){
+            var b = new Function('return '+clicker.achvmnts[i].req)
+            if(b() && !clicker.achvmnts[i].earned){
+                clicker.achvmnts[i].earned = true;
+                document.querySelector("#achvmnts").innerHTML+=`<br>Achievement unlocked:<br>${clicker.achvmnts[i].text}<br>`;
+            }
+        }
+        document.querySelector("#potatoes").innerHTML = "You have "+numberformat.format(Number(String(clicker.potatoes).split('.')[0])) + " potatoes."; // Splits # into 2 arrays at the decimal and only displays the 1st one
+        delay++;
+        if(delay >= 40) {
+            Cookies.set("clicker",JSON.stringify(clicker), {expires: 9999});
+            delay = 0;
+        }
+        },50)
+    }
+  </script>
+</head>
+<body onload="updatecount()">
+  <h1 id="potatoes">You have 0 potatoes.</h1>
+  <button onclick="clicker.potatoes++">Get 1 potato!</button>
+  <div id="upgrades"></div>
+  <br />
+  <div id="achvmnts" style="width:400px; height:300px; overflow:scroll"></div>
+</body>
+<br />
+<br />
+<br />
+<br />
+<br />
+<footer>
+  <small><a href="http://rchaseq.github.io">by Rowan Quinn</a></small>
+</footer>
