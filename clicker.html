@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>Potato Clicker</title>
+  <title>Potato Clicker by Rowan</title>
 
   <!-- Adding JS Cookie to handle cookies -->
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
@@ -16,29 +16,33 @@
             potato_machine:{
                 amount:0,
                 cost:100,
-                pps:10, // potatoes per second
+                unlocked: false,
+                threshold: 1,  //threshold of clicks needed for upgrade to appear
+                pps: 10, // potatoes per second
                 id:"Potato Machine"
-
             },
             potato_farm:{
                 amount:0,
                 cost:1000,
-                pps:20, // potatoes per second
+                unlocked: false,
+                threshold: 100, //threshold of clicks needed for upgrade to appear
+                pps: 20, // potatoes per second
                 id:"Potato Farm"
-
             },
             potato_factory:{
                 amount:0,
                 cost:10000,
-                pps:50, // potatoes per second
+                unlocked: false,
+                threshold: 1000, //threshold of clicks needed for upgrade to appear
+                pps: 50, // potatoes per second
                 id:"Potato Factory"
-
             }
         },
     //code for achievements below
-        achvmnts:[{req:"clicker.potatoes>0",earned:false,text:"Your first potato!"},{req:"clicker.potatoes>49",earned:false,text:"50 potatoes - you're on a roll!"}]
+        achvmnts:[{req:"clicker.potatoes>0",earned:false,text:"Your first potato!"},{req:"clicker.potatoes>99",earned:false,text:"100 potatoes - you're on a roll!"}]
     };
     var delay = 0;
+    var pps = 0;
     function item_clicked(item){
         if(clicker.upgrades[item].cost <= clicker.potatoes){
         clicker.potatoes-=clicker.upgrades[item].cost;
@@ -50,9 +54,14 @@
     // code for upgrade buttons below
     function update_upgrades(){
         document.querySelector("#upgrades").innerHTML="";
+        var d = 0;
         for(i in clicker.upgrades){
-            document.querySelector("#upgrades").innerHTML+=`<br> <button onclick="item_clicked('${i}')">${clicker.upgrades[i].id}:${clicker.upgrades[i].cost} potatoes</button> You currently have ${clicker.upgrades[i].amount}`;
+            if(clicker.upgrades[i].unlocked){
+            document.querySelector("#upgrades").innerHTML+=`<br> <button onclick="item_clicked('${i}')">${clicker.upgrades[i].id}:${numberformat.format(clicker.upgrades[i].cost)} potatoes</button> You currently have ${numberformat.format(clicker.upgrades[i].amount)}`;
+            d+= clicker.upgrades[i].pps * clicker.upgrades[i].amount;                   
+            }
         }
+        pps = d;
     }
     function updatecount(){
     // code to save progress to cache below
@@ -73,6 +82,16 @@
         clicker = clicker1;
     }
         update_upgrades();
+    // code to enable earning potatoes while offline (at least 1 minute closed)
+        if(Cookies.get("lastplay") != null){
+            var lastsavedate = Number(Cookies.get("lastplay"));
+            lastsavedate = Date.now() - lastsavedate;
+            lastsavedate = Math.round(lastsavedate/1000);
+            if(lastsavedate / 60 >= 1){
+                clicker.potatoes += lastsavedate * pps / 1.8;
+                document.querySelector("#achvmnts").innerHTML += `<br>While you were gone:<br>You earned ${numberformat.format(lastsavedate*pps/1.8)} potatoes!`;
+            }
+        };
         setInterval(() => {
         for(i in clicker.upgrades){
             clicker.potatoes+=clicker.upgrades[i].amount * clicker.upgrades[i].pps / 20;
@@ -85,10 +104,19 @@
                 document.querySelector("#achvmnts").innerHTML+=`<br>Achievement unlocked:<br>${clicker.achvmnts[i].text}<br>`;
             }
         }
-        document.querySelector("#potatoes").innerHTML = "You have "+numberformat.format(Number(String(clicker.potatoes).split('.')[0])) + " potatoes."; // Splits # into 2 arrays at the decimal and only displays the 1st one
+        document.querySelector("#potatoes").innerHTML = "You have "+numberformat.format(Number(String(clicker.potatoes).split('.')[0])) + " potatoes."; // Splits original # into 2 arrays at the decimal and only displays the 1st one
+    //code to display upgrades only if the click threshold is met below
+        for(i in clicker.upgrades){
+            if(!clicker.upgrades[i].unlocked && clicker.upgrades[i].threshold <= clicker.potatoes){
+                clicker.upgrades[i].unlocked = true;
+                update_upgrades();
+            }
+        }
+    //code to define cookie expiration date (in days)
         delay++;
         if(delay >= 40) {
             Cookies.set("clicker",JSON.stringify(clicker), {expires: 9999});
+            Cookies.set("lastplay",Date.now(), {expires: 9999})
             delay = 0;
         }
         },50)
@@ -108,5 +136,5 @@
 <br />
 <br />
 <footer>
-  <small><a href="http://rchaseq.github.io">by Rowan Quinn</a></small>
+  <small>by <a href="http://rchaseq.github.io"></a>Rowan Quinn</a>, 2022</small>
 </footer>
