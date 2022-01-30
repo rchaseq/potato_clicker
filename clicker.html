@@ -13,33 +13,52 @@
         potatoes:0,
     // code for upgrades below
         upgrades: {
-            potato_machine:{
+            potato_plants:{
                 amount:0,
                 cost:100,
                 unlocked: false,
                 threshold: 1,  //threshold of clicks needed for upgrade to appear
                 pps: 10, // potatoes per second
-                id:"Potato Machine"
+                id:"Potato Plants"
             },
             potato_farm:{
                 amount:0,
-                cost:1000,
-                unlocked: false,
-                threshold: 100, //threshold of clicks needed for upgrade to appear
-                pps: 20, // potatoes per second
-                id:"Potato Farm"
-            },
-            potato_factory:{
-                amount:0,
-                cost:10000,
+                cost:1500,
                 unlocked: false,
                 threshold: 1000, //threshold of clicks needed for upgrade to appear
                 pps: 50, // potatoes per second
+                id:"Potato Farm"
+            },
+            potato_machine:{
+                amount:0,
+                cost:7500,
+                unlocked: false,
+                threshold: 6000,  //threshold of clicks needed for upgrade to appear
+                pps: 100, // potatoes per second
+                id:"Potato Machine"
+            },
+            potato_factory:{
+                amount:0,
+                cost:15000,
+                unlocked: false,
+                threshold: 13000, //threshold of clicks needed for upgrade to appear
+                pps: 300, // potatoes per second
                 id:"Potato Factory"
             }
         },
     //code for achievements below
-        achvmnts:[{req:"clicker.potatoes>0",earned:false,text:"Your first potato!"},{req:"clicker.potatoes>99",earned:false,text:"100 potatoes - you're on a roll!"}]
+        achvmnts:[
+            {req:"clicker.potatoes>0",earned:false,text:"Your first potato!"},
+            {req:"clicker.potatoes>99",earned:false,text:"500 potatoes - you're on a roll!"},
+            {req:"clicker.potatoes>68",earned:false,text:"69 potatoes - niiiiiice"},
+            {req:"clicker.potatoes>419",earned:false,text:"420 potatoes - blaze it"},
+            {req:"clicker.potatoes>999",earned:false,text:"1,000 potatoes - a small fortune of spuds!"},
+            {req:"clicker.potatoes>9999",earned:false,text:"10,000 potatoes - enough tater tots for life!"},
+            {req:"clicker.potatoes>80084",earned:false,text:"80085 potatoes - enough said"},
+            {req:"clicker.potatoes>99999",earned:false,text:"100,000 potatoes - a true tuber treasure!"},
+            {req:"clicker.potatoes>499999",earned:false,text:"500,000 potatoes - you could feed a small country for a whole year!"},
+            {req:"clicker.potatoes>999999",earned:false,text:"1,000,000 potatoes - an embarrassment of taters!"},
+        ]
     };
     var delay = 0;
     var pps = 0;
@@ -136,5 +155,5 @@
 <br />
 <br />
 <footer>
-  <small>by <a href="http://rchaseq.github.io"></a>Rowan Quinn</a>, 2022</small>
+  <small>by <a href="http://rchaseq.github.io">Rowan Quinn</a>, 2022</small>
 </footer>
