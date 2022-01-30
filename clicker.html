@@ -17,7 +17,7 @@
                 amount:0,
                 cost:100,
                 unlocked: false,
-                threshold: 1,  //threshold of clicks needed for upgrade to appear
+                threshold: 10,  //threshold of clicks needed for upgrade to appear
                 pps: 10, // potatoes per second
                 id:"Potato Plants"
             },
@@ -26,7 +26,7 @@
                 cost:1500,
                 unlocked: false,
                 threshold: 1000, //threshold of clicks needed for upgrade to appear
-                pps: 50, // potatoes per second
+                pps: 30, // potatoes per second
                 id:"Potato Farm"
             },
             potato_machine:{
@@ -34,7 +34,7 @@
                 cost:7500,
                 unlocked: false,
                 threshold: 6000,  //threshold of clicks needed for upgrade to appear
-                pps: 100, // potatoes per second
+                pps: 50, // potatoes per second
                 id:"Potato Machine"
             },
             potato_factory:{
@@ -42,22 +42,27 @@
                 cost:15000,
                 unlocked: false,
                 threshold: 13000, //threshold of clicks needed for upgrade to appear
-                pps: 300, // potatoes per second
+                pps: 100, // potatoes per second
                 id:"Potato Factory"
             }
         },
     //code for achievements below
         achvmnts:[
             {req:"clicker.potatoes>0",earned:false,text:"Your first potato!"},
-            {req:"clicker.potatoes>99",earned:false,text:"100 potatoes - you're on a roll!"},
             {req:"clicker.potatoes>68",earned:false,text:"69 potatoes - niiiiiice"},
+            {req:"clicker.potatoes>99",earned:false,text:"100 potatoes - you're on a roll!"},
             {req:"clicker.potatoes>419",earned:false,text:"420 potatoes - blaze it"},
+            {req:"clicker.potatoes>665",earned:false,text:"666 potatoes - how devilish"},
             {req:"clicker.potatoes>999",earned:false,text:"1,000 potatoes - a small fortune of spuds!"},
             {req:"clicker.potatoes>9999",earned:false,text:"10,000 potatoes - enough tater tots for life!"},
-            {req:"clicker.potatoes>80084",earned:false,text:"80085 potatoes - enough said"},
             {req:"clicker.potatoes>99999",earned:false,text:"100,000 potatoes - a true tuber treasure!"},
             {req:"clicker.potatoes>499999",earned:false,text:"500,000 potatoes - you could feed a small country for a whole year!"},
             {req:"clicker.potatoes>999999",earned:false,text:"1,000,000 potatoes - an embarrassment of taters!"},
+            {req:"clicker.potatoes>1999999",earned:false,text:"2,000,000 potatoes - but where will you keep them all?"},
+            {req:"clicker.potatoes>4999999",earned:false,text:"5,000,000 potatoes - Ore-Ida processes this many raw potatoes per day!"},
+            {req:"clicker.potatoes>8008134",earned:false,text:"8,008,135 potatoes - (.)(.)"},
+            {req:"clicker.potatoes>8675308",earned:false,text:"8,675,309 potatoes - For a good time, call Jenny"},
+            {req:"clicker.potatoes>999999999",earned:false,text:"ONE BILLION POTATOES - It's time for a hobby, my friend!"},
         ]
     };
     var delay = 0;
@@ -76,7 +81,7 @@
         var d = 0;
         for(i in clicker.upgrades){
             if(clicker.upgrades[i].unlocked){
-            document.querySelector("#upgrades").innerHTML+=`<br> <button onclick="item_clicked('${i}')">${clicker.upgrades[i].id}:${numberformat.format(clicker.upgrades[i].cost)} potatoes</button> You currently have ${numberformat.format(clicker.upgrades[i].amount)}`;
+            document.querySelector("#upgrades").innerHTML+=`<br> <button onclick="item_clicked('${i}')">${clicker.upgrades[i].id}</button> Cost: ${numberformat.format(clicker.upgrades[i].cost)} potatoes. (You currently own ${numberformat.format(clicker.upgrades[i].amount)}.)`;
             d+= clicker.upgrades[i].pps * clicker.upgrades[i].amount;                   
             }
         }
@@ -107,8 +112,8 @@
             lastsavedate = Date.now() - lastsavedate;
             lastsavedate = Math.round(lastsavedate/1000);
             if(lastsavedate / 60 >= 1){
-                clicker.potatoes += lastsavedate * pps / 1.8;
-                document.querySelector("#achvmnts").innerHTML += `<br>While you were gone:<br>You earned ${numberformat.format(lastsavedate*pps/1.8)} potatoes!`;
+                clicker.potatoes += lastsavedate * pps / 5.3;
+                document.querySelector("#achvmnts").innerHTML += `<br>While you were gone:<br>You earned ${numberformat.format(lastsavedate*pps/5.3)} potatoes!`;
             }
         };
         setInterval(() => {
@@ -138,7 +143,7 @@
             Cookies.set("lastplay",Date.now(), {expires: 9999})
             delay = 0;
         }
-        },50)
+        },200)
     }
   </script>
 </head>
@@ -155,5 +160,5 @@
 <br />
 <br />
 <footer>
-  <small>by <a href="http://rchaseq.github.io">Rowan Quinn</a>, 2022</small>
+  <small>by <a href="http://rchaseq.github.io" target="_blank">Rowan Quinn</a>, 2022</small>
 </footer>
